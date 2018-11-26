@@ -209,28 +209,28 @@ orderers:
 #
 peers:
   peer0.org1.rxmed.com:
-    url: grpcs://18.191.245.142:7051
+    url: grpcs://172.31.22.13:7051
     grpcOptions:
       ssl-target-name-override: peer0.org1.rxmed.com
     tlsCACerts:
       path: artifacts/channel/crypto-config/peerOrganizations/org1.rxmed.com/peers/peer0.org1.rxmed.com/tls/ca.crt
 
   peer1.org1.rxmed.com:
-    url: grpcs://18.191.245.142:7056
+    url: grpcs://172.31.22.13:7056
     grpcOptions:
       ssl-target-name-override: peer1.org1.rxmed.com
     tlsCACerts:
       path: artifacts/channel/crypto-config/peerOrganizations/org1.rxmed.com/peers/peer1.org1.rxmed.com/tls/ca.crt
 
   peer2.org1.rxmed.com:
-    url: grpcs://18.191.245.142:7061
+    url: grpcs://172.31.22.13:7061
     grpcOptions:
       ssl-target-name-override: peer2.org1.rxmed.com
     tlsCACerts:
       path: artifacts/channel/crypto-config/peerOrganizations/org1.rxmed.com/peers/peer2.org1.rxmed.com/tls/ca.crt
 
   peer3.org1.rxmed.com:
-    url: grpcs://18.191.245.142:7065
+    url: grpcs://172.31.22.13:7065
     grpcOptions:
       ssl-target-name-override: peer3.org1.rxmed.com
     tlsCACerts:
