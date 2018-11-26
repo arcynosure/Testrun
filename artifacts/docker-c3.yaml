@@ -38,8 +38,8 @@ services:
       - 9053:7053
     volumes:
         - ./channel/crypto-config/peerOrganizations/org3.rxmed.com/peers/peer0.org3.rxmed.com/:/etc/hyperledger/crypto/peer
-    depends_on:
-      - orderer.rxmed.com
+    # depends_on:
+    #   - orderer.rxmed.com
 
   peer1.org3.rxmed.com:
     container_name: peer1.org3.rxmed.com
@@ -57,8 +57,8 @@ services:
       - 9058:7053
     volumes:
         - ./channel/crypto-config/peerOrganizations/org3.rxmed.com/peers/peer1.org3.rxmed.com/:/etc/hyperledger/crypto/peer
-    depends_on:
-      - orderer.rxmed.com
+    # depends_on:
+    #   - orderer.rxmed.com
 
   peer2.org3.rxmed.com:
     container_name: peer2.org3.rxmed.com
@@ -76,8 +76,8 @@ services:
       - 9063:7053
     volumes:
         - ./channel/crypto-config/peerOrganizations/org3.rxmed.com/peers/peer2.org3.rxmed.com/:/etc/hyperledger/crypto/peer
-    depends_on:
-      - orderer.rxmed.com
+    # depends_on:
+    #   - orderer.rxmed.com
 
   peer3.org3.rxmed.com:
     container_name: peer3.org3.rxmed.com
@@ -95,5 +95,5 @@ services:
       - 9067:7053
     volumes:
         - ./channel/crypto-config/peerOrganizations/org3.rxmed.com/peers/peer3.org3.rxmed.com/:/etc/hyperledger/crypto/peer
-    depends_on:
-      - orderer.rxmed.com
+    # depends_on:
+    #   - orderer.rxmed.com
