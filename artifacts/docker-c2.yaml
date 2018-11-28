@@ -27,6 +27,8 @@ services:
     extends:
       file:   base.yaml
       service: peer-base
+    extra_hosts:
+      - "orderer.rxmed.com:18.191.245.142"
     environment:
       - CORE_PEER_ID=peer0.org2.rxmed.com
       - CORE_PEER_LOCALMSPID=Org2MSP
@@ -46,6 +48,8 @@ services:
     extends:
       file:   base.yaml
       service: peer-base
+    extra_hosts:
+      - "orderer.rxmed.com:18.191.245.142"
     environment:
       - CORE_PEER_ID=peer1.org2.rxmed.com
       - CORE_PEER_LOCALMSPID=Org2MSP
@@ -65,6 +69,8 @@ services:
     extends:
       file:   base.yaml
       service: peer-base
+    extra_hosts:
+      - "orderer.rxmed.com:18.191.245.142"
     environment:
       - CORE_PEER_ID=peer2.org2.rxmed.com
       - CORE_PEER_LOCALMSPID=Org2MSP
@@ -84,6 +90,8 @@ services:
     extends:
       file:   base.yaml
       service: peer-base
+    extra_hosts:
+      - "orderer.rxmed.com:18.191.245.142"
     environment:
       - CORE_PEER_ID=peer3.org2.rxmed.com
       - CORE_PEER_LOCALMSPID=Org2MSP

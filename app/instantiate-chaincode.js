@@ -31,7 +31,7 @@ var instantiateChaincode = async function(peers, channelName, chaincodeName, cha
 
 		// send proposal to endorser
 		var request = {
-			targets: peers,
+			// targets: peers,
 			chaincodeId: chaincodeName,
 			chaincodeType: chaincodeType,
 			chaincodeVersion: chaincodeVersion,
