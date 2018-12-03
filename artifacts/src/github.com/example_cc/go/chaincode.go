@@ -96,17 +96,22 @@ func (t *rxMedChaincode) Init(stub shim.ChaincodeStubInterface) pb.Response {
 		fmt.Println("Added", patients[j])
 		j = j + 1
 	}
+	Medic := []Medication{
+		Medication{MedName: "ccc", Compound: "xxxxx", Dosage: "vvvv", Quantity: "bbbbb"},
+		Medication{MedName: "cc1", Compound: "xx1", Dosage: "vv1", Quantity: "bb1"},
+	}
 
-	patients := []Patient{
-		Patient{PatientID: "PAT1", []Medications{Medication{MedName: "ccc", Compound: "xxxxx", Dosage: "vvvv", Quantity: "bbbbb"}, Medication{MedName: "cc1", Compound: "xx1", Dosage: "vv1", Quantity: "bb1"}}, Pin: "686101"}}
+	patients1 := []Patient{
+		Patient{PatientID: "PAT1", Medications: Medic, Pin: 686101},
+	}
 
-	j := 0
-	for j < len(patients) {
-		fmt.Println("j is ", j)
-		patientAsBytes, _ := json.Marshal(patients[j])
-		stub.PutState("PRESC"+strconv.Itoa(j), patientAsBytes)
-		fmt.Println("Added", patients[j])
-		j = j + 1
+	l := 0
+	for l < len(patients1) {
+		fmt.Println("l is ", l)
+		patientAsBytes, _ := json.Marshal(patients1[l])
+		stub.PutState("PRESC"+strconv.Itoa(l), patientAsBytes)
+		fmt.Println("Added", patients1[l])
+		l = l + 1
 	}
 
 	pharmacies := []Pharmacy{
@@ -344,13 +349,13 @@ func (t *rxMedChaincode) createDoctor(stub shim.ChaincodeStubInterface, args []s
 	return shim.Success(docAsBytes)
 }
 
-func (t *rxMedChaincode) createPatient(stub shim.ChaincodeStubInterface, args []string) pb.Response {
+func (t *rxMedChaincode) createPatientPrivate(stub shim.ChaincodeStubInterface, args []string) pb.Response {
 
 	if len(args) != 5 {
 		return shim.Error("Incorrect number of arguments. Expecting 5 arguments for the invoke")
 	}
 
-	var patient = Patient{PatientID: args[1], Name: args[2], Dob: args[3], Bloodgroup: args[4]}
+	var patient = PatientPrivate{PatientID: args[1], Name: args[2], Dob: args[3], Bloodgroup: args[4], Address: args[5]}
 	patAsBytes, _ := json.Marshal(patient)
 	stub.PutState(args[0], patAsBytes)
 
@@ -412,7 +417,7 @@ func (t *rxMedChaincode) updatePatient(stub shim.ChaincodeStubInterface, args []
 
 	patAsBytes, _ := stub.GetState(args[0])
 	/* If want to update all fields */
-	patient := Patient{PatientID: args[1], Name: args[2], Dob: args[3], Bloodgroup: args[4]}
+	patient := PatientPrivate{PatientID: args[1], Name: args[2], Dob: args[3], Bloodgroup: args[4], Address: args[5]}
 	/* if want to update a single field */
 	/*
 		patAsBytes, _ := stub.GetState(args[0])
