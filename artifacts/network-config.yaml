@@ -193,7 +193,7 @@ organizations:
 #
 orderers:
   orderer.rxmed.com:
-    url: grpcs://localhost:7050
+    url: grpcs://18.191.245.142:7050
 
     # these are standard properties defined by the gRPC library
     # they will be passed in as-is to gRPC client constructor
