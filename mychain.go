@@ -78,7 +78,7 @@ func (t *rxMedChaincode) Init(stub shim.ChaincodeStubInterface) pb.Response {
 	for i < len(doctors) {
 		fmt.Println("i is ", i)
 		doctorAsBytes, _ := json.Marshal(doctors[i])
-		stub.PutState("DOC"+strconv.Itoa(i), doctorAsBytes)
+		stub.PutPrivateData("doctorcollection", "DOC"+strconv.Itoa(i), doctorAsBytes)
 		fmt.Println("Added", doctors[i])
 		i = i + 1
 	}
@@ -92,19 +92,21 @@ func (t *rxMedChaincode) Init(stub shim.ChaincodeStubInterface) pb.Response {
 	for j < len(patients) {
 		fmt.Println("j is ", j)
 		patientAsBytes, _ := json.Marshal(patients[j])
-		stub.PutState("PAT"+strconv.Itoa(j), patientAsBytes)
+		stub.PutPrivateData("collectionPatientPrivate", "PAT"+strconv.Itoa(j), patientAsBytes)
 		fmt.Println("Added", patients[j])
 		j = j + 1
 	}
 
 	patients := []Patient{
-		Patient{PatientID: "PAT1", []Medications{Medication{MedName: "ccc", Compound: "xxxxx", Dosage: "vvvv", Quantity: "bbbbb"}, Medication{MedName: "cc1", Compound: "xx1", Dosage: "vv1", Quantity: "bb1"}}, Pin: "686101"}}
+		Patient{PatientID: "PAT1",[]Medication{ Medication{MedName: "ccc", Compound: "xxxxx", Dosage: "vvvv", Quantity: "bbbbb"}},Pin: "686101"}
+		
+	}
 
 	j := 0
 	for j < len(patients) {
 		fmt.Println("j is ", j)
 		patientAsBytes, _ := json.Marshal(patients[j])
-		stub.PutState("PRESC"+strconv.Itoa(j), patientAsBytes)
+		stub.PutPrivateData("collectionPatient", "PAT"+strconv.Itoa(j), patientAsBytes)
 		fmt.Println("Added", patients[j])
 		j = j + 1
 	}
@@ -117,7 +119,7 @@ func (t *rxMedChaincode) Init(stub shim.ChaincodeStubInterface) pb.Response {
 	for k < len(pharmacies) {
 		fmt.Println("k is ", k)
 		pharmacyAsBytes, _ := json.Marshal(pharmacies[k])
-		stub.PutState("PHARM"+strconv.Itoa(k), pharmacyAsBytes)
+		stub.PutPrivateData("pharmacycollection", "PHARM"+strconv.Itoa(k), pharmacyAsBytes)
 		fmt.Println("Added", pharmacies[k])
 		k = k + 1
 	}
@@ -189,7 +191,7 @@ func (t *rxMedChaincode) query(stub shim.ChaincodeStubInterface, args []string) 
 	A = args[0]
 
 	// Get the state from the ledger
-	Avalbytes, err := stub.GetState(A)
+	Avalbytes, err := stub.GetPrivateData("doctorcollections",A)
 	if err != nil {
 		jsonResp := "{\"Error\":\"Failed to get state for " + A + "\"}"
 		return shim.Error(jsonResp)
@@ -336,7 +338,7 @@ func (t *rxMedChaincode) createDoctor(stub shim.ChaincodeStubInterface, args []s
 
 	var doctor = Doctor{DoctorID: args[1], Name: args[2], RegisterNumber: args[3], Hospital: args[4]}
 	docAsBytes, _ := json.Marshal(doctor)
-	stub.PutState(args[0], docAsBytes)
+	stub.PutPrivateData("doctorcollection", args[0], docAsBytes)
 
 	logger.Infof("Create Doctor Response:%s\n", string(docAsBytes))
 
@@ -344,21 +346,37 @@ func (t *rxMedChaincode) createDoctor(stub shim.ChaincodeStubInterface, args []s
 	return shim.Success(docAsBytes)
 }
 
-func (t *rxMedChaincode) createPatient(stub shim.ChaincodeStubInterface, args []string) pb.Response {
+func (t *rxMedChaincode) createPatientPrivate(stub shim.ChaincodeStubInterface, args []string) pb.Response {
 
 	if len(args) != 5 {
 		return shim.Error("Incorrect number of arguments. Expecting 5 arguments for the invoke")
 	}
 
-	var patient = Patient{PatientID: args[1], Name: args[2], Dob: args[3], Bloodgroup: args[4]}
+	var patient = Patient{PatientID: args[1], Name: args[2], Dob: args[3], Bloodgroup: args[4], Address: args[5]}
 	patAsBytes, _ := json.Marshal(patient)
-	stub.PutState(args[0], patAsBytes)
+	stub.PutPrivateData("collectionPatientPrivate", args[0], patAsBytes)
 
 	logger.Infof("Create Patient Response:%s\n", string(patAsBytes))
 
 	// Transaction Response
 	return shim.Success(patAsBytes)
 }
+
+// func (t *rxMedChaincode) createPatient(stub shim.ChaincodeStubInterface, args []string) pb.Response {
+
+// 	if len(args) != 5 {
+// 		return shim.Error("Incorrect number of arguments. Expecting 5 arguments for the invoke")
+// 	}
+
+// 	var patient = Patient{PatientID: args[1], []Medication{arg[2]}, Dob: args[3], Bloodgroup: args[4], Address: args[5]}
+// 	patAsBytes, _ := json.Marshal(patient)
+// 	stub.PutPrivateData("collectionPatientPrivate", args[0], patAsBytes)
+
+// 	logger.Infof("Create Patient Response:%s\n", string(patAsBytes))
+
+// 	// Transaction Response
+// 	return shim.Success(patAsBytes)
+// }
 
 func (t *rxMedChaincode) createPharmacy(stub shim.ChaincodeStubInterface, args []string) pb.Response {
 
@@ -368,7 +386,7 @@ func (t *rxMedChaincode) createPharmacy(stub shim.ChaincodeStubInterface, args [
 
 	var pharmacy = Pharmacy{PharmacyID: args[1], Name: args[2], Pin: args[3], Owner: args[4]}
 	pharmAsBytes, _ := json.Marshal(pharmacy)
-	stub.PutState(args[0], pharmAsBytes)
+	stub.PutPrivateData("pharmacycollection", args[0], pharmAsBytes)
 
 	logger.Infof("Create Pharmacy Response:%s\n", string(pharmAsBytes))
 
@@ -390,12 +408,13 @@ func (t *rxMedChaincode) updateDoctor(stub shim.ChaincodeStubInterface, args []s
 	/*
 		docAsBytes, _ := stub.GetState(args[0])
 		doctor := Doctor{}
+
 		json.Unmarshal(docAsBytes, &doctor)
 		doctor.Hospital = args[4]
 	*/
 
 	docAsBytes, _ = json.Marshal(doctor)
-	stub.PutState(args[0], docAsBytes)
+	stub.PutPrivateData("doctorcollection", args[0], docAsBytes)
 
 	logger.Infof("Create Doctor Response:%s\n", string(docAsBytes))
 
@@ -417,12 +436,13 @@ func (t *rxMedChaincode) updatePatient(stub shim.ChaincodeStubInterface, args []
 	/*
 		patAsBytes, _ := stub.GetState(args[0])
 		patient := Patient{}
+
 		json.Unmarshal(patAsBytes, &patient)
 		patient.Hospital = args[4]
 	*/
 
 	patAsBytes, _ = json.Marshal(patient)
-	stub.PutState(args[0], patAsBytes)
+	stub.PutPrivateData(args[0], patAsBytes)
 
 	logger.Infof("Create Patient Response:%s\n", string(patAsBytes))
 
@@ -444,12 +464,13 @@ func (t *rxMedChaincode) updatePharmacy(stub shim.ChaincodeStubInterface, args [
 	/*
 		pharmAsBytes, _ := stub.GetState(args[0])
 		pharmacy := Pharmacy{}
+
 		json.Unmarshal(pharmAsBytes, &pharmacy)
 		pharmacy.Hospital = args[4]
 	*/
 
 	pharmAsBytes, _ = json.Marshal(pharmacy)
-	stub.PutState(args[0], pharmAsBytes)
+	stub.PutPrivateData(args[0], pharmAsBytes)
 
 	logger.Infof("Create Pharmacy Response:%s\n", string(pharmAsBytes))
 
@@ -463,3 +484,4 @@ func main() {
 		logger.Errorf("Error starting rxMed Chaincode: %s", err)
 	}
 }
+
