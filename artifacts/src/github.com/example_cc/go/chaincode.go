@@ -33,6 +33,7 @@ type PatientPrivate struct {
 	Name       string `json:"name"`
 	Dob        string `json:"dob"`
 	Bloodgroup string `json:"bloodgroup"`
+	Address    string `json:"address"`
 }
 
 type Medication struct {
@@ -83,8 +84,8 @@ func (t *rxMedChaincode) Init(stub shim.ChaincodeStubInterface) pb.Response {
 	}
 
 	patients := []PatientPrivate{
-		PatientPrivate{PatientID: "PAT1", Name: "Mahesh", Dob: "11/2/1990", Bloodgroup: "O+"},
-		PatientPrivate{PatientID: "PAT2", Name: "Maheshwe", Dob: "11/2/1996", Bloodgroup: "B+"},
+		PatientPrivate{PatientID: "PAT1", Name: "Mahesh", Dob: "11/2/1990", Bloodgroup: "O+", Address: "ccccc"},
+		PatientPrivate{PatientID: "PAT2", Name: "Maheshwe", Dob: "11/2/1996", Bloodgroup: "B+", Address: "ccc2222c"},
 	}
 
 	j := 0
@@ -157,8 +158,12 @@ func (t *rxMedChaincode) Invoke(stub shim.ChaincodeStubInterface) pb.Response {
 		return t.createDoctor(stub, args)
 	}
 
+	if function == "createPatientPrivate" {
+		return t.createPatientPrivate(stub, args)
+	}
+
 	if function == "createPatient" {
-		return t.createDoctor(stub, args)
+		return t.createPatient(stub, args)
 	}
 
 	if function == "createPharmacy" {
@@ -354,8 +359,8 @@ func (t *rxMedChaincode) createPatientPrivate(stub shim.ChaincodeStubInterface, 
 		return shim.Error("Incorrect number of arguments. Expecting 5 arguments for the invoke")
 	}
 
-	var patientz = PatientPrivate{PatientID: args[1], Name: args[2], Dob: args[3], Bloodgroup: args[4]}
-	patAsBytes, _ := json.Marshal(patientz)
+	var patient = PatientPrivate{PatientID: args[1], Name: args[2], Dob: args[3], Bloodgroup: args[4], Address: args[5]}
+	patAsBytes, _ := json.Marshal(patient)
 	stub.PutState(args[0], patAsBytes)
 
 	logger.Info("Create Patient Response:%s\n", string(patAsBytes))
