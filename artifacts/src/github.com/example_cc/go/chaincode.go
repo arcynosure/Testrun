@@ -46,7 +46,7 @@ type Medication struct {
 type Patient struct {
 	PatientID   string `json:"patientid`
 	Medications []Medication
-	Pin         int `json:"pin"`
+	Pin         string `json:"pin"`
 }
 
 type Pharmacy struct {
@@ -102,7 +102,7 @@ func (t *rxMedChaincode) Init(stub shim.ChaincodeStubInterface) pb.Response {
 	}
 
 	patients1 := []Patient{
-		Patient{PatientID: "PAT1", Medications: Medic, Pin: 686101},
+		Patient{PatientID: "PAT1", Medications: Medic, Pin: "686101"},
 	}
 
 	l := 0
@@ -370,8 +370,12 @@ func (t *rxMedChaincode) createPatient(stub shim.ChaincodeStubInterface, args []
 	if len(args) != 3 {
 		return shim.Error("Incorrect number of arguments. Expecting 3 arguments for the invoke")
 	}
-	logger.info("========" + args[2])
-	var patient = PatientPrivate{PatientID: args[1], Medications: args[2], Pin: args[3]}
+	logger.Info("========%s", args[2])
+	Medic := []Medication{
+		Medication{MedName: "ccc", Compound: "xxxxx", Dosage: "vvvv", Quantity: "bbbbb"},
+		Medication{MedName: "cc1", Compound: "xx1", Dosage: "vv1", Quantity: "bb1"},
+	}
+	var patient = Patient{PatientID: args[1], Medications: Medic, Pin: args[3]}
 	patAsBytes, _ := json.Marshal(patient)
 	stub.PutState(args[0], patAsBytes)
 
@@ -379,6 +383,7 @@ func (t *rxMedChaincode) createPatient(stub shim.ChaincodeStubInterface, args []
 
 	// Transaction Response
 	return shim.Success(patAsBytes)
+
 }
 
 func (t *rxMedChaincode) createPharmacy(stub shim.ChaincodeStubInterface, args []string) pb.Response {
