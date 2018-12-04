@@ -44,7 +44,7 @@ type Medication struct {
 }
 
 type Patient struct {
-	PatientID   string `json:"patientid`
+	PatientID   string `json:"patientid"`
 	Medications []Medication
 	Pin         string `json:"pin"`
 }
@@ -351,8 +351,8 @@ func (t *rxMedChaincode) createDoctor(stub shim.ChaincodeStubInterface, args []s
 
 func (t *rxMedChaincode) createPatientPrivate(stub shim.ChaincodeStubInterface, args []string) pb.Response {
 
-	if len(args) != 5 {
-		return shim.Error("Incorrect number of arguments. Expecting 5 arguments for the invoke")
+	if len(args) != 6 {
+		return shim.Error("Incorrect number of arguments. Expecting 6 arguments for the invoke")
 	}
 
 	var patient = PatientPrivate{PatientID: args[1], Name: args[2], Dob: args[3], Bloodgroup: args[4], Address: args[5]}
