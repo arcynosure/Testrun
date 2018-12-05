@@ -355,18 +355,18 @@ func (t *rxMedChaincode) createDoctor(stub shim.ChaincodeStubInterface, args []s
 
 func (t *rxMedChaincode) createPatientPrivate(stub shim.ChaincodeStubInterface, args []string) pb.Response {
 
-	if len(args) != 5 {
-		return shim.Error("Incorrect number of arguments. Expecting 5 arguments for the invoke")
+	if len(args) != 6 {
+		return shim.Error("Incorrect number of arguments. Expecting 6 arguments for the invoke")
 	}
 
-	var patient = PatientPrivate{PatientID: args[1], Name: args[2], Dob: args[3], Bloodgroup: args[4], Address: args[5]}
-	patAsBytes, _ := json.Marshal(patient)
-	stub.PutState(args[0], patAsBytes)
+	var patientPrivate = PatientPrivate{PatientID: args[1], Name: args[2], Dob: args[3], Bloodgroup: args[4], Address: args[5]}
+	patPrivateAsBytes, _ := json.Marshal(patientPrivate)
+	stub.PutState(args[0], patPrivateAsBytes)
 
-	logger.Info("Create Patient Response:%s\n", string(patAsBytes))
+	logger.Info("Create Patient Response:%s\n", string(patPrivateAsBytes))
 
 	// Transaction Response
-	return shim.Success(patAsBytes)
+	return shim.Success(patPrivateAsBytes)
 }
 
 func (t *rxMedChaincode) createPatient(stub shim.ChaincodeStubInterface, args []string) pb.Response {
