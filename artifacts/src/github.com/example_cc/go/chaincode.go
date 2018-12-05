@@ -375,7 +375,9 @@ func (t *rxMedChaincode) createPatient(stub shim.ChaincodeStubInterface, args []
 		return shim.Error("Incorrect number of arguments. Expecting 7 arguments for the invoke")
 	}
 
-	Medic := Medication{MedName: args[2], Compound: args[3], Dosage: args[4], Quantity: args[5]}
+	Medic := []Medication{
+		Medication{MedName: args[2], Compound: args[3], Dosage: args[4], Quantity: args[5]}
+	}
 	var patient = Patient{PatientID: args[1], Medications: Medic, Pin: args[6]}
 	patAsBytes, _ := json.Marshal(patient)
 	stub.PutState(args[0], patAsBytes)
