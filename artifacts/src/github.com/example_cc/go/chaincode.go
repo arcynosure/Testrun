@@ -376,8 +376,7 @@ func (t *rxMedChaincode) createPatient(stub shim.ChaincodeStubInterface, args []
 	}
 
 	Medic := []Medication{
-		Medication{MedName: args[2], Compound: args[3], Dosage: args[4], Quantity: args[5]}
-	}
+		Medication{MedName: args[2], Compound: args[3], Dosage: args[4], Quantity: args[5]}}
 	var patient = Patient{PatientID: args[1], Medications: Medic, Pin: args[6]}
 	patAsBytes, _ := json.Marshal(patient)
 	stub.PutState(args[0], patAsBytes)
