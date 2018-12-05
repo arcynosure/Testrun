@@ -147,7 +147,7 @@ func (t *rxMedChaincode) Invoke(stub shim.ChaincodeStubInterface) pb.Response {
 
 	if function == "queryAll" {
 		// query all records
-		return t.queryAll(stub, args
+		return t.queryAll(stub, args)
 	}
 
 	if function == "queryHistory" {
