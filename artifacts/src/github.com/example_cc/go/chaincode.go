@@ -374,20 +374,7 @@ func (t *rxMedChaincode) createPatient(stub shim.ChaincodeStubInterface, args []
 	if len(args) != 7 {
 		return shim.Error("Incorrect number of arguments. Expecting 7 arguments for the invoke")
 	}
-	A = args[0]
-
-	// Get the state from the ledger
-	Avalbytes, err := stub.GetState(A)
-	if err != nil {
-		jsonResp := "{\"Error\":\"Failed to get state for " + A + "\"}"
-		return shim.Error(jsonResp)
-	}
-
-	if Avalbytes == nil {
-		jsonResp := "{\"Error\":\"Nil amount for " + A + "\"}"
-		return shim.Error(jsonResp)
-	}
-	else{
+	
 	Medic := []Medication{
 		Medication{MedName: args[2], Compound: args[3], Dosage: args[4], Quantity: args[5]}}
 	var patient = Patient{PatientID: args[1], Medications: Medic, Pin: args[6]}
@@ -398,8 +385,7 @@ func (t *rxMedChaincode) createPatient(stub shim.ChaincodeStubInterface, args []
 
 	// Transaction Response
 	return shim.Success(patAsBytes)
-	}
-	return shim.Error(nil);
+	
 
 }
 
